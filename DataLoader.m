@@ -20,4 +20,4 @@ for i = 1:NumFiles(1) %Iterates through each the length of FileList
 
 end
 
-clear FileList filepath FolderName i name NumFiles %Clears all variables created in this script
+clear FileList filepath FolderName i name %Clears all variables created in this script
