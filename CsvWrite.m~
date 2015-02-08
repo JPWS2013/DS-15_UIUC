@@ -7,8 +7,6 @@ NumData=NumFiles(1);
 clear NumFiles
 
 for i = 1:NumData
-    name=FileList(i).name
-
 end
 
 

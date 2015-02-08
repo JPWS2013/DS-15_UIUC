@@ -1,8 +1,12 @@
+%File Name: DataLoader.m
+%Code authored by Justin Poh for Olin College Data Science, Spring 2015
+%------------------------------------------
 %Loading Script
 %Loads all data from folder into MATLAB workspace for processing
-
+%------------------------------------------
 %NOTE: Check that the file path in "FolderName" is correctly specified 
 %      before running script
+%------------------------------------------
 
 clear all
 
@@ -20,4 +24,4 @@ for i = 1:NumFiles(1) %Iterates through each the length of FileList
 
 end
 
-clear FileList filepath FolderName i name %Clears all variables created in this script
+clear filepath FolderName i name %Clears all variables created in this script
