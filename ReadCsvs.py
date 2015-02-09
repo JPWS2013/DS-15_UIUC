@@ -10,6 +10,7 @@ useful for further processing.
 
 import GaitClass as gc
 import numpy as np
+import pandas as pd
 
 def CsvtoList(filepath):
     """
@@ -34,32 +35,127 @@ def CsvtoList(filepath):
     
     return t #return the cleaned list
 
-NameList=CsvtoList('Csvs/fname.csv') #Retrieves the list of file names from the csv file
-FullData={}#Creates a dictionary that will store the full data
-
-for EachFile in NameList: #for each file name listed in the list of file names
-    label_filename='Csvs/'+EachFile[0:-4]+'_Label.csv'#create the file path to obtain the csv containing the labels for the markers
-    labels=CsvtoList(label_filename) #retreive a list of the labels for the markers
-
-    for i in range(3): #depending on whether you're looking for the x, y or z set of data
-        if i==0: #if you're looking for the x set
-            CsvName='Csvs/'+EachFile[0:-4] + '_x.csv' #create the file path to the csv containing the x set of data
-            data1=np.genfromtxt(CsvName, delimiter=',') #generate a numpy array from the data in that csv
+def FormData():
+    """
+    This function converts the CSV files into one 3D numpy array (ndarray) for each trial. It then stores the ndarray in an 
+    instance of a gaitraw object and then stores each gaitraw object into a dictionary using the original matlab structure file 
+    name as the key and the 3D numpy array as the value. 
+    
+    Returns a dictionary of all the GaitRaw objects representing each trial in the dataset
+    """
+    NameList=CsvtoList('Csvs/fname.csv') #Retrieves the list of file names from the csv file
+    FullData={}#Creates a dictionary that will store the full data
+    
+    for EachFile in NameList: #for each file name listed in the list of file names
+        label_filename='Csvs/'+EachFile[0:-4]+'_Label.csv'#create the file path to obtain the csv containing the labels for the markers
+        labels=CsvtoList(label_filename) #retreive a list of the labels for the markers
+    
+        for i in range(3): #depending on whether you're looking for the x, y or z set of data
+            if i==0: #if you're looking for the x set
+                CsvName='Csvs/'+EachFile[0:-4] + '_x.csv' #create the file path to the csv containing the x set of data
+                data1=np.genfromtxt(CsvName, delimiter=',') #generate a numpy array from the data in that csv
+                
+            if i==1:
+                CsvName='Csvs/'+EachFile[0:-4] + '_y.csv' #create the file path to the csv containing the y set of data
+                data2=np.genfromtxt(CsvName, delimiter=',') #generate a numpy array from the data in that csv
+            if i==2:
+                CsvName='Csvs/'+EachFile[0:-4] + '_z.csv' #create the file path to the csv containing the z set of data
+                data3=np.genfromtxt(CsvName, delimiter=',') #generate a numpy array from the data in that csv
             
-        if i==1:
-            CsvName='Csvs/'+EachFile[0:-4] + '_y.csv' #create the file path to the csv containing the y set of data
-            data2=np.genfromtxt(CsvName, delimiter=',') #generate a numpy array from the data in that csv
-        if i==2:
-            CsvName='Csvs/'+EachFile[0:-4] + '_z.csv' #create the file path to the csv containing the z set of data
-            data3=np.genfromtxt(CsvName, delimiter=',') #generate a numpy array from the data in that csv
+        dataset=np.dstack((data1, data2, data3)) #stack them depth wise to form the final 3D array
         
-    dataset=np.dstack((data1, data2, data3)) #stack them depth wise to form the final 3D array
+        FullData[EachFile]=gc.GaitRaw(dataset,labels,EachFile) #Initiate a GaitRaw object for each dataset and store all data sets in a dictionary with the file names as keys
+        
+    return FullData
+
+def SortbyFootwear(DataDict):
+    """
+    This function sorts the data by footwear and performs a first pass at cleaning the data by ensuring each data set contains 
+    a column for all the markers, regardless of whether there is data for them or not. It also stores each trial in an instance
+    of a MarkerTime object that indicates that the columns are markers, the rows are time and the depth is space coordinate.
     
-    FullData[EachFile]=gc.GaitRaw(dataset,labels,EachFile) #Initiate a GaitRaw object for each dataset and store all data sets in a dictionary with the file names as keys
+    All the generated MarkerTime objects are then stored in one of three dictionaries depending on what footwear was worn.
+    
+    Returns a tuple of dictionaries (AFO, PPAFO, Shoes)
+    """
+    keys=DataDict.keys() #Retrieves all the filenames contained in the dictionary of raw data
+    PPAFO_dict=dict() #Initializes a place to store the categorized PPAFO raw data
+    AFO_dict=dict() #Initializes a place to store the categorized AFO raw data
+    Shoes_dict=dict() #Initializes a place to store the categorized Shoes raw data
+    PPAFO=dict() #Initializes a place to store the cleaned PPAFO data
+    AFO=dict() #Initializes a place to store the cleaned AFO data
+    Shoes=dict() #Initializes a place to store the cleaned Shoes data
+    
+    for DataName in keys: #for each file name in the raw data dictionary
+        if 'PPAFO' in DataName: #if it has PPAFO in the file name
+            PPAFO_dict[DataName]=DataDict[DataName] #file it in the PPAFO raw data dictionary
+        elif 'PPAFO' not in DataName and 'AFO' not in DataName: #else if it doesn't have PPAFO or AFO in the file name
+            Shoes_dict[DataName]=DataDict[DataName] #file it in the Shoes raw data dictionary 
+        else: #else if it doesn't match either criteria
+            AFO_dict[DataName]=DataDict[DataName] #then it must be an AFO trial so file it in the AFo raw data dictionary
+    
+    #Some debugging statements to help determine if the above sorting algorithm has sorted the files correctly
+    #print len(PPAFO_dict.keys())
+    #print len(AFO_dict.keys())
+    #print len(Shoes_dict.keys())
+    
+    collection=[PPAFO_dict, AFO_dict, Shoes_dict] #packs up all the raw data dictionaries into a list for processing
+    
+    for i in range(3): #for each of the footwear conditions
+        for FName in collection[i].keys(): #for each file name contained in each raw data dictionary
+        
+            #FullLabelSet is a list containing the names of every possible marker in order from participant's right to participant's left in order around the legs
+            FullLabelSet=['SACRAL', 'R_ASIS', 'R_TROCH', 'R_THIGH', 'R_LAT_KNEE', 'R_TIB', 'R_LAT_MAL', 'R_TOE_5', 'R_TOE_1', 'R_MED_MAL', 'R_HEEL', 'R_MED_KNEE', 'L_MED_KNEE', 'L_HEEL', 'L_MED_MAL', 'L_TOE_1', 'L_TOE_5', 'L_LAT_MAL', 'L_TIB', 'L_LAT_KNEE', 'L_TROCH', 'L_THIGH', 'L_ASIS']
+            
+            DataArr=collection[i][FName] #Retrieves the GaitRaw object for that file name
+            Data=DataArr.data #Retrieves the 3D ndarray for that file name
+            dimen=Data.shape #Determines the shape of the ndarray
+            
+            #Debugging statement to check the format of dimen
+            #print "Dimen=", dimen
+            
+            #Initialize an empty numpy array that has as many columns as there are markers (23) and as many rows as there are time points
+            init=np.empty((dimen[1], 23))  
+            init[:]=np.nan #Converts all values in the initialized ndarray to NANs
+            
+            X=pd.DataFrame(data=init, columns=FullLabelSet) #Creates a pandas dataframe for the X spatial coordinate
+            Y=pd.DataFrame(data=init, columns=FullLabelSet) #Creates a pandas dataframe for the Y spatial coordinate
+            Z=pd.DataFrame(data=init, columns=FullLabelSet) #Creates a pandas dataframe for the Z spatial coordinate
+            
+            for label in FullLabelSet: #for each label in the FullLabelSet
+                lab=DataArr.labels #Retrieve the labels stored in the GaitRaw object for each trial
+                if label in lab: #if the trial had that marker identified
+                    RowIndex=lab.index(label) #find out which row the data for that marker was stored in
+                    X[label]=Data[RowIndex, :,0] #Get the data for that marker from the 1st plane of the 3D ndarray
+                    Y[label]=Data[RowIndex, :,1]#Get the data for that marker from the 2nd plane of the 3D ndarray
+                    Z[label]=Data[RowIndex, :,2]#Get the data for that marker from the 3rd plane of the 3D ndarray
+                    
+                    #Debug statement to check the length of the data being retrieved                    
+                    #print len(Data[RowIndex,:,0])
+            
+            res=gc.MarkerTime(FName, X, Y, Z) #store the three pandas dataframes into a MarkerTime object representing that trial
+            
+            if i==0:
+                PPAFO[FName]=res #if we're working with PPAFO trials, store the MarkerTime object in the PPAFO dictionary
+            
+            if i==1:
+                AFO[FName]=res #if we're working with AFO trials, store the MarkerTime object in the AFO dictionary
+            
+            if i==2:
+                Shoes[FName]=res #if we're working with Shoes trials, store the MarkerTime object in the Shoes dictionary
+            
+            
+            
+    return AFO, PPAFO, Shoes #return the three dictionaries as a tuple
+   
+if __name__ == '__main__':
     
 
-#This is just testing script that can be used to verify the data array has the right shape
-keys=FullData.keys()
-
-print FullData[keys[1]].name
-print FullData[keys[1]].data.shape
+    FullData=FormData() #Get all the data out of the CSV files
+    AFO, PPAFO, Shoes=SortbyFootwear(FullData) #Process and clean the data to have a consistent number of columns with column names in the same order
+    CleanDat=gc.GaitData(15, AFO, PPAFO, Shoes) #Store all trials in a GaitData object that represents each participant
+    
+    #Some debug statements to check that each clean data dictionary has the right number of trials in them
+#    print len(AFO.keys())
+#    print len(PPAFO.keys())
+#    print len(Shoes.keys())
