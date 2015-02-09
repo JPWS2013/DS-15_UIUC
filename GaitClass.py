@@ -18,19 +18,18 @@ class GaitData:
         self.ppafo=PPAFO
         self.shoes=Shoes
 
-class MarkerTime(GaitData):
+class MarkerTime(GaitData): 
     """
     This class creates an object that represents the cleaned data from 1 trial
-    """
+    """    
+    def __init__(self, Label, X, Y, Z):
+       self.name=Label
+       self.x=X
+       self.y=Y
+       self.z=Z
    
-   def __init__(self, Label, X, Y, Z):
-        self.name=Label
-        self.x=X
-        self.y=Y
-        self.z=Z
-   
-   def AddStructure(self, pd, label):
-        self.data[label]=pd
+    def AddStructure(self, pd, label):
+       self.data[label]=pd
 
         
 class GaitRaw:
