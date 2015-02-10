@@ -22,11 +22,12 @@ class MarkerTime(GaitData):
     """
     This class creates an object that represents the cleaned data from 1 trial
     """    
-    def __init__(self, Label, X, Y, Z):
+    def __init__(self, Label, X, Y, Z, R):
        self.name=Label
        self.x=X
        self.y=Y
        self.z=Z
+       self.r=R
    
     def AddStructure(self, pd, label):
        self.data[label]=pd
