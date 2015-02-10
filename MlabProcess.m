@@ -66,7 +66,7 @@ for i = 1:NumFiles(1) %Iterates through each the length of FileList
         StructDim=size(data); %Gets the size of the data structure
         SummDat=[SummDat,',', num2str(StructDim(1)),',', num2str(StructDim(3)),','];
         
-        for j = 1 : (StructDim(2)-1) %For each slice of the 3D array (i.e. x or y or z)
+        for j = 1 : (StructDim(2)) %For each slice of the 3D array (i.e. x or y or z)
             set=data(:,j,:); %Retrieves the slice of the array
             if j==1%Sets the file name of the csv based on whether the array represents the x, y or z data
                 Data_Filename=strcat('Csvs/',name(1:(length(name)-4)), '_x.csv');
@@ -74,6 +74,8 @@ for i = 1:NumFiles(1) %Iterates through each the length of FileList
                 Data_Filename=strcat('Csvs/',name(1:(length(name)-4)), '_y.csv');
             elseif j==3
                 Data_Filename=strcat('Csvs/',name(1:(length(name)-4)), '_z.csv');
+            elseif j==4
+                Data_Filename=strcat('Csvs/',name(1:(length(name)-4)), '_r.csv');
             end
             
             csvwrite(Data_Filename, set) %Writes the csv file for each slice of the data set

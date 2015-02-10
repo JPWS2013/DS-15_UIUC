@@ -12,6 +12,13 @@ import GaitClass as gc
 import numpy as np
 import pandas as pd
 
+def ReadGaitData():
+    FullData=FormData() #Get all the data out of the CSV files
+    AFO, PPAFO, Shoes=SortbyFootwear(FullData) #Process and clean the data to have a consistent number of columns with column names in the same order
+    CleanDat=gc.GaitData(15, AFO, PPAFO, Shoes) #Store all trials in a GaitData object that represents each participant
+    
+    return CleanDat
+
 def CsvtoList(filepath):
     """
     This function carries out the "dirty" work of converting a set of strings in a csv written by MATLAB into a list of the strings
@@ -50,7 +57,7 @@ def FormData():
         label_filename='Csvs/'+EachFile[0:-4]+'_Label.csv'#create the file path to obtain the csv containing the labels for the markers
         labels=CsvtoList(label_filename) #retreive a list of the labels for the markers
     
-        for i in range(3): #depending on whether you're looking for the x, y or z set of data
+        for i in range(4): #depending on whether you're looking for the x, y or z set of data
             if i==0: #if you're looking for the x set
                 CsvName='Csvs/'+EachFile[0:-4] + '_x.csv' #create the file path to the csv containing the x set of data
                 data1=np.genfromtxt(CsvName, delimiter=',') #generate a numpy array from the data in that csv
@@ -61,8 +68,12 @@ def FormData():
             if i==2:
                 CsvName='Csvs/'+EachFile[0:-4] + '_z.csv' #create the file path to the csv containing the z set of data
                 data3=np.genfromtxt(CsvName, delimiter=',') #generate a numpy array from the data in that csv
+                
+            if i==3:
+                CsvName='Csvs/'+EachFile[0:-4] + '_r.csv' #create the file path to the csv containing the z set of data
+                data4=np.genfromtxt(CsvName, delimiter=',') #generate a numpy array from the data in that csv
             
-        dataset=np.dstack((data1, data2, data3)) #stack them depth wise to form the final 3D array
+        dataset=np.dstack((data1, data2, data3, data4)) #stack them depth wise to form the final 3D array
         
         FullData[EachFile]=gc.GaitRaw(dataset,labels,EachFile) #Initiate a GaitRaw object for each dataset and store all data sets in a dictionary with the file names as keys
         
@@ -121,6 +132,7 @@ def SortbyFootwear(DataDict):
             X=pd.DataFrame(data=init, columns=FullLabelSet) #Creates a pandas dataframe for the X spatial coordinate
             Y=pd.DataFrame(data=init, columns=FullLabelSet) #Creates a pandas dataframe for the Y spatial coordinate
             Z=pd.DataFrame(data=init, columns=FullLabelSet) #Creates a pandas dataframe for the Z spatial coordinate
+            R=pd.DataFrame(data=init, columns=FullLabelSet) #Creates a pandas dataframe for the Z spatial coordinate
             
             for label in FullLabelSet: #for each label in the FullLabelSet
                 lab=DataArr.labels #Retrieve the labels stored in the GaitRaw object for each trial
@@ -129,11 +141,12 @@ def SortbyFootwear(DataDict):
                     X[label]=Data[RowIndex, :,0] #Get the data for that marker from the 1st plane of the 3D ndarray
                     Y[label]=Data[RowIndex, :,1]#Get the data for that marker from the 2nd plane of the 3D ndarray
                     Z[label]=Data[RowIndex, :,2]#Get the data for that marker from the 3rd plane of the 3D ndarray
+                    R[label]=Data[RowIndex, :,3]#Get the data for that marker from the 3rd plane of the 3D ndarray
                     
                     #Debug statement to check the length of the data being retrieved                    
                     #print len(Data[RowIndex,:,0])
             
-            res=gc.MarkerTime(FName, X, Y, Z) #store the three pandas dataframes into a MarkerTime object representing that trial
+            res=gc.MarkerTime(FName, X, Y, Z, R) #store the three pandas dataframes into a MarkerTime object representing that trial
             
             if i==0:
                 PPAFO[FName]=res #if we're working with PPAFO trials, store the MarkerTime object in the PPAFO dictionary
@@ -151,11 +164,11 @@ def SortbyFootwear(DataDict):
 if __name__ == '__main__':
     
 
-    FullData=FormData() #Get all the data out of the CSV files
-    AFO, PPAFO, Shoes=SortbyFootwear(FullData) #Process and clean the data to have a consistent number of columns with column names in the same order
-    CleanDat=gc.GaitData(15, AFO, PPAFO, Shoes) #Store all trials in a GaitData object that represents each participant
+    Data=ReadGaitData()
+    
     
     #Some debug statements to check that each clean data dictionary has the right number of trials in them
 #    print len(AFO.keys())
+#    print AFO[AFO.keys()[0]].r
 #    print len(PPAFO.keys())
 #    print len(Shoes.keys())
