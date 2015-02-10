@@ -15,7 +15,7 @@ clear all
 
 %Sets the file path
 %/*.mat part specifies only to obtain file names with .mat in them
-FolderName='Sub015_Exported_MATLAB/*mat';%Sets the file path
+FolderName='OriginalData/Sub015_Exported_MATLAB/*mat';%Sets the file path
 
 
 %Checks for the folder to put the CSVs in
@@ -76,6 +76,7 @@ for i = 1:NumFiles(1) %Iterates through each the length of FileList
                 Data_Filename=strcat('Csvs/',name(1:(length(name)-4)), '_z.csv');
             elseif j==4
                 Data_Filename=strcat('Csvs/',name(1:(length(name)-4)), '_r.csv');
+            
             end
             
             csvwrite(Data_Filename, set) %Writes the csv file for each slice of the data set
