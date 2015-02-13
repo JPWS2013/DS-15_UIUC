@@ -11,7 +11,7 @@ import thinkstats2
 import thinkplot
 import ReadCsvs as rc
 
-data = rc.ReadGaidData()
+data = rc.ReadGaitData()
 
 for run in data:
     hist = thinkstats2.Hist(run)
