@@ -1,0 +1,17 @@
+http://www.hindawi.com/journals/msi/2013/645197/
+
+Gait variability is quantified using distributional metrics, such as the standard deviation (SD) and coefficient of variation (CV) of kinematic and spatiotemporal gait parameters. SD provides a measure of absolute variability, while CV provides a measure of relative variability. Other nonlinear metrics, such as detrended fluctuation analysis and approximate entropy, have been used to examine the temporal sequential structure of gait variability (i.e., the time-evolving structure of variability)
+
+Examinations of spatiotemporal parameters have revealed that individuals with MS walk slower, taking shorter, slower steps, and spending more of their gait cycle in double-support than healthy controls and these impairments scale with disability 
+
+Short walks(≤10 meters):
+Variability in walking performance was viewed as random fluctuations (e.g., noise) that must be filtered to reveal significant changes in walking function
+	changes in timed 25-foot walk time of 20% or more indicate meaningful change in walking function
+	Also related to level of disability
+Greater standard deviation of hip, knee and ankle angles than in healthy controls and COV of step time and single support time (?)
+Persons with MS demonstrated greater CV of both step time and step length
+Additionally, a positive correlation between EDSS and CV and SD of step time and step length and a negative correlation between expanded disability status scale (EDSS) and CV and SD of step width was observed
+
+The differential effect of MS on gait variability of propulsion metrics (e.g., step length, step time, etc.) and gait variability of stability metrics (e.g., step width) is congruent with the notion that stability gait parameters (e.g., step width) and propulsion gait parameters (e.g., step length, step time) are controlled by separate neural circuits that could be differently influenced by disability
+Furthermore, individuals with MS who used assistive devices experienced significantly greater increases in variability of step time, length, width, and double-support time in the last 2 minutes of the test compared to the first 2 minutes compared with the independently ambulatory MS group and controls
+However, the same data showed no differences in detrended fluctuation analysis, another nonlinear measure of variability, of stride length, and width variability between persons with MS and controls, but the treadmill may change gait variability

@@ -10,9 +10,9 @@ This module is used to compute SD and mean for the residual provided in the data
 import thinkstats2
 import ReadCsvs as rc
 
-Data=rc.ReadGaitData()
+data=rc.ReadGaitData()
 
-t=[Data.afo, Data.ppafo, Data.shoes]
+t=[data.afo, data.ppafo, data.shoes]
 
 for fw in t:
     for dataset in fw.keys():
