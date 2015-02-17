@@ -5,7 +5,6 @@ Created on Sun Feb 15 15:08:55 2015
 @author: jpoh
 """
 
-import Python_valid_v2 as PVal
 import ReadCsvs as rc
 import os
 import numpy as np
@@ -47,15 +46,22 @@ def ValidationTest(GaitData, fw, PNum, TrialNum):
                 
             truth=[truth_series.mean(), truth_series.median(), truth_series.max(), truth_series.min()]
             
-            for eachCheck in ToCheck:
-                for eachTruth in truth:
-                    if eachCheck != eachTruth:
+            for k in range(len(ToCheck)):
+                
+                eachCheck = ToCheck[k]
+                eachTruth = truth[k]
+                if abs(round(eachCheck,2) - round(eachTruth,2)) > 0.011:
+                    
+                    print "ERROR FOUND!!"
+                    print "Label=", label
+                    print "eachCheck =", round(eachCheck,2)
+                    print "eachTruth =", round(eachTruth, 2)
+                    print abs(round(eachCheck,2) - round(eachTruth,2))
+                    sys.exit()
+                    
+                #print abs(round(eachCheck,2) - round(eachTruth,2))
                         
-                        print "ERROR FOUND!!"
-                        print "eachCheck =", eachCheck
-                        print "eachTruth =", eachTruth
-                        sys.exit()
-                        
+        #print "Label", label, "has passed tests"
     
     print "Tests complete, all passed!"
                         

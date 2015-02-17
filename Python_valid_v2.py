@@ -1,11 +1,10 @@
 """
-File: ReadCsvs.py
+File: Python_valid_v2.py
 Created on Sat Feb  7 23:57:02 2015
 
 Code authored by Justin Poh for Data Science, Spring 2015
 
-This module provides functions to parse the csv files created by the matlab script in order to generate the appropriate data structures
-useful for further processing.
+This module provides functions to parse the csv files created by the matlab script in order to validate the data transferred from matlab to python
 """
 
 import GaitClass as gc
@@ -86,13 +85,15 @@ def CsvtoList(filepath):
     
     return t #return the cleaned list
 
-def FormData():
+def ParseCsv(filename):
     """
-    This function converts the CSV files into one 3D numpy array (ndarray) for each trial. It then stores the ndarray in an 
+    This function converts the CSV files into a numpy array (ndarray). It then stores the ndarray in an 
     instance of a gaitraw object and then stores each gaitraw object into a dictionary using the original matlab structure file 
     name as the key and the 3D numpy array as the value. 
     
-    Returns a dictionary of all the GaitRaw objects representing each trial in the dataset
+    filename: name of file as a string
+    
+    Returns a numpy array of the contents of the csv
     """
     NameList=CsvtoList('Csvs/fname.csv') #Retrieves the list of file names from the csv file
     FullData={}#Creates a dictionary that will store the full data

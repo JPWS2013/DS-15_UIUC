@@ -35,12 +35,12 @@ if count > 0
     TrialInd=strfind(name, '_00');
     TrialNum=num2str((name((TrialInd+1):TrialInd+4)));
                 
-    for i=1 : 4
+    for i=1 : 3
         
         output_mat=[0,0,0,0];
         
         if i==1
-            SpaceCoord='X'
+            %SpaceCoord='X'
             csv_filename='Validate/validdata_x.csv'
         elseif i==2
             csv_filename='Validate/validdata_y.csv'

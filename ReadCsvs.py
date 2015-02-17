@@ -95,8 +95,7 @@ def FormData():
     
     Returns a dictionary of all the GaitRaw objects representing each trial in the dataset
     """
-    #NameList=CsvtoList('Csvs/fname.csv') #Retrieves the list of file names from the csv file
-    NameList=['Sub001_6MW_PPAFO_0001.mat']
+    NameList=CsvtoList('Csvs/fname.csv') #Retrieves the list of file names from the csv file
     FullData={}#Creates a dictionary that will store the full data
     
     for EachFile in NameList: #for each file name listed in the list of file names
@@ -166,7 +165,7 @@ def SortbyFootwear_MT(DataDict):
     
     for i in range(3): #for each of the footwear conditions
         for FName in collection[i].keys(): #for each file name contained in each raw data dictionary
-            print FName
+            #print FName
         
             #FullLabelSet is a list containing the names of every possible marker in order from participant's right to participant's left in order around the legs
             FullLabelSet=['SACRAL', 'R_ASIS', 'R_TROCH', 'R_THIGH', 'R_LAT_KNEE', 'R_TIB', 'R_LAT_MAL', 'R_TOE_5', 'R_TOE_1', 'R_MED_MAL', 'R_HEEL', 'R_MED_KNEE', 'L_MED_KNEE', 'L_HEEL', 'L_MED_MAL', 'L_TOE_1', 'L_TOE_5', 'L_LAT_MAL', 'L_TIB', 'L_LAT_KNEE', 'L_TROCH', 'L_THIGH', 'L_ASIS']
