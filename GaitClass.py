@@ -62,6 +62,16 @@ class MarkerTime(GaitData):
     def AddStructure(self, pd, label):
        self.data[label]=pd
        
+    def GetData(self, plane):
+        if plane=='x':
+            return self.x
+            
+        if plane=='y':
+            return self.y
+            
+        if plane=='z':
+            return self.z
+       
     def __str__(self):
         
         message="This data is for trial number " + str(self.trial) + " for Participant " + str(self.pnum) + " who was wearing " + str(self.fw) + "." 
