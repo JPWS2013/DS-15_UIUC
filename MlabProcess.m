@@ -91,7 +91,7 @@ for j = 1:NumSubFolders(1) %for each subfolder
                 StructDim=size(data); %Gets the size of the data structure
                 SummDat=[SummDat,',', num2str(StructDim(1)),',', num2str(StructDim(3)),','];
                 
-                for j = 1 : (StructDim(2)) %For each slice of the 3D array (i.e. x or y or z)
+                for j = 1 : (StructDim(2)) %For each slice of the 3D array (i.e. x or y, z or r)
                     set=data(:,j,:); %Retrieves the slice of the array
                     if j==1%Sets the file name of the csv based on whether the array represents the x, y or z data
                         Data_Filename=strcat('Csvs/',name(1:(length(name)-4)), '_x.csv');
