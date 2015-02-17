@@ -11,6 +11,7 @@ useful for further processing.
 import GaitClass as gc
 import numpy as np
 import pandas as pd
+import copy
 
 def ReadGaitData():
     FullData=FormData() #Get all the data out of the CSV files
@@ -94,7 +95,8 @@ def FormData():
     
     Returns a dictionary of all the GaitRaw objects representing each trial in the dataset
     """
-    NameList=CsvtoList('Csvs/fname.csv') #Retrieves the list of file names from the csv file
+    #NameList=CsvtoList('Csvs/fname.csv') #Retrieves the list of file names from the csv file
+    NameList=['Sub001_6MW_PPAFO_0001.mat']
     FullData={}#Creates a dictionary that will store the full data
     
     for EachFile in NameList: #for each file name listed in the list of file names
@@ -164,7 +166,7 @@ def SortbyFootwear_MT(DataDict):
     
     for i in range(3): #for each of the footwear conditions
         for FName in collection[i].keys(): #for each file name contained in each raw data dictionary
-            #print FName
+            print FName
         
             #FullLabelSet is a list containing the names of every possible marker in order from participant's right to participant's left in order around the legs
             FullLabelSet=['SACRAL', 'R_ASIS', 'R_TROCH', 'R_THIGH', 'R_LAT_KNEE', 'R_TIB', 'R_LAT_MAL', 'R_TOE_5', 'R_TOE_1', 'R_MED_MAL', 'R_HEEL', 'R_MED_KNEE', 'L_MED_KNEE', 'L_HEEL', 'L_MED_MAL', 'L_TOE_1', 'L_TOE_5', 'L_LAT_MAL', 'L_TIB', 'L_LAT_KNEE', 'L_TROCH', 'L_THIGH', 'L_ASIS']
@@ -180,20 +182,23 @@ def SortbyFootwear_MT(DataDict):
             #Initialize an empty numpy array that has as many columns as there are markers (23) and as many rows as there are time points
             init=np.empty((dimen[1], 23))  
             init[:]=np.nan #Converts all values in the initialized ndarray to NANs
+            template=pd.DataFrame(data=init, columns=FullLabelSet) 
             
-            X=pd.DataFrame(data=init, columns=FullLabelSet) #Creates a pandas dataframe for the X spatial coordinate
-            Y=pd.DataFrame(data=init, columns=FullLabelSet) #Creates a pandas dataframe for the Y spatial coordinate
-            Z=pd.DataFrame(data=init, columns=FullLabelSet) #Creates a pandas dataframe for the Z spatial coordinate
-            R=pd.DataFrame(data=init, columns=FullLabelSet) #Creates a pandas dataframe for the Z spatial coordinate
+            X=copy.deepcopy(template) #Creates a pandas dataframe for the X spatial coordinate
+            Y=copy.deepcopy(template) #Creates a pandas dataframe for the Y spatial coordinate
+            Z=copy.deepcopy(template) #Creates a pandas dataframe for the Z spatial coordinate
+            R=copy.deepcopy(template) #Creates a pandas dataframe for the R spatial coordinate
+            
             
             for label in FullLabelSet: #for each label in the FullLabelSet
                 lab=DataArr.labels #Retrieve the labels stored in the GaitRaw object for each trial
                 if label in lab: #if the trial had that marker identified
                     RowIndex=lab.index(label) #find out which row the data for that marker was stored in
-                    X[label]=Data[RowIndex, :,0] #Get the data for that marker from the 1st plane of the 3D ndarray
-                    Y[label]=Data[RowIndex, :,1]#Get the data for that marker from the 2nd plane of the 3D ndarray
-                    Z[label]=Data[RowIndex, :,2]#Get the data for that marker from the 3rd plane of the 3D ndarray
-                    R[label]=Data[RowIndex, :,3]#Get the data for that marker from the 3rd plane of the 3D ndarray
+
+                    X[label]=Data[RowIndex,:,0].tolist() #Get the data for that marker from the 1st plane of the 3D ndarray
+                    Y[label]=Data[RowIndex,:,1]#Get the data for that marker from the 2nd plane of the 3D ndarray
+                    Z[label]=Data[RowIndex,:,2]#Get the data for that marker from the 3rd plane of the 3D ndarray
+                    R[label]=Data[RowIndex,:,3]#Get the data for that marker from the 3rd plane of the 3D ndarray
                     
                     #Debug statement to check the length of the data being retrieved                    
                     #print len(Data[RowIndex,:,0])
@@ -233,13 +238,13 @@ def SortbyFootwear_MT(DataDict):
    
 if __name__ == '__main__':
     
-
-    AFO, PPAFO, Shoes=ReadGaitData()
     
-    print AFO.keys()
-    print AFO[1]
-    print AFO[1].ShowTrials()
-    print AFO[1].GetTrial(1)
+    AFO, PPAFO, Shoes=ReadGaitData()    
+    
+    #print AFO.keys()
+    #print AFO[1]
+    #print AFO[1].ShowTrials()
+    #print AFO[1].GetTrial(1)
     
     
     #Some debug statements to check that each clean data dictionary has the right number of trials in them
