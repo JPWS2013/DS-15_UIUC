@@ -1,10 +1,11 @@
-# -*- coding: utf-8 -*-
 """
-Created on Sun Feb 15 15:08:55 2015
+File: DataValidate.py
+Created on Sat Feb  7 23:57:02 2015
 
-@author: jpoh
+Code authored by Justin Poh and Julianne Jorgensen for Data Science, Spring 2015
+
+This module provides functions to validate the pipeline using validation data generated in matlab
 """
-
 import ReadCsvs as rc
 import os
 import numpy as np
