@@ -23,6 +23,7 @@ class Participant:
         self.pnum=ParticipantNum
         self.trials=dict()
         
+        
     def AddTrial(self, TrialObj):
         self.trials[TrialObj.trial]=TrialObj
         
@@ -34,6 +35,38 @@ class Participant:
     
     def GetTrial(self, TrialNum):
         return self.trials[TrialNum]
+        
+    def CreateBaseline(self): #NOTE: THIS FUNCITON IS CURRENTLY UNTESTED (17TH FEB)
+        
+        try:
+            trial1=self.trials[1]
+            trial2=self.trials[2]
+            
+        except:
+            print "ERROR: Trials 1 and 2 were not found for participant ", self.pnum
+                
+        markerset=trial1.x.columns
+        baseline_dct=dict()
+        
+        for marker in markerset:
+            
+            
+            mean1=trial1.x[marker].mean()
+            mean2=trial2.x[marker].mean()
+            OverallMean_x=(mean1+mean2)/2.0
+            
+            mean1=trial1.y[marker].mean()
+            mean2=trial2.y[marker].mean()
+            OverallMean_y=(mean1+mean2)/2.0
+            
+            mean1=trial1.z[marker].mean()
+            mean2=trial2.z[marker].mean()
+            OverallMean_z=(mean1+mean2)/2.0
+            
+            baseline_dct[marker]=(OverallMean_x, OverallMean_y, OverallMean_z)
+            
+        self.baseline=baseline_dct
+        
         
     def __str__(self):
         
@@ -61,6 +94,16 @@ class MarkerTime(GaitData):
    
     def AddStructure(self, pd, label):
        self.data[label]=pd
+       
+    def GetData(self, plane):
+        if plane=='x':
+            return self.x
+            
+        if plane=='y':
+            return self.y
+            
+        if plane=='z':
+            return self.z
        
     def __str__(self):
         
