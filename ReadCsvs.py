@@ -96,10 +96,9 @@ def FormData():
     Returns a dictionary of all the GaitRaw objects representing each trial in the dataset
     """
     NameList=CsvtoList('Csvs/fname.csv') #Retrieves the list of file names from the csv file
-<<<<<<< HEAD
+
     #NameList=['Sub001_6MW_PPAFO_0001.mat']
-=======
->>>>>>> 1a39f33a6a1ebec1ed7211a83e655d03286868ad
+
     FullData={}#Creates a dictionary that will store the full data
     
     for EachFile in NameList: #for each file name listed in the list of file names

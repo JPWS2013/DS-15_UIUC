@@ -1,5 +1,5 @@
-data=Sub015_6MW_PPAFO_0005.Trajectories.Labeled.Data;
-downsample = 2;
+data=Sub002_6MW_AFO_0005.Trajectories.Labeled.Data;
+downsample = 10;
 for i = 1:downsample:size(data,3)
     x=data(:,1,i);
     y=data(:,2,i);
