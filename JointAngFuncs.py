@@ -7,9 +7,10 @@ Created on Mon Mar  2 11:16:58 2015
 
 import math
 import numpy as np
+import thinkplot
+import thinkstats2
 
-
-def JointAngles(fw, pnum, trial, mark1, mark2, mark3):
+def JointAngles(AFO, PPAFO, Shoes, fw, pnum, trial, mark1, mark2, mark3):
     """
     This function computes the joint angles for a given participant, trial and set of markers
     
@@ -49,9 +50,9 @@ def JointAngles(fw, pnum, trial, mark1, mark2, mark3):
     R_Tib_z = MT_Obj.z[mark2]
     R_Thigh_z = MT_Obj.z[mark3]
 
-    x_dir_vec=[1,0,0]
-    y_dir_vec=[0,1,0]
-    z_dir_vec=[0,0,1]
+#    x_dir_vec=[1,0,0]
+#    y_dir_vec=[0,1,0]
+#    z_dir_vec=[0,0,1]
 
     for i in range(len(R_Lat_Knee_x)):
     
@@ -78,7 +79,7 @@ def JointAngles(fw, pnum, trial, mark1, mark2, mark3):
     
 ############################################
 
-def AngleDiff(fw, participant, WalkTrial, mark1, mark2, mark3, plot=False):
+def AngleDiff(AFO, PPAFO, Shoes, fw, participant, baselineTrial, WalkTrial, mark1, mark2, mark3, plot=False, reverse=False):
     """
     This function computes the difference between each angle in the walking trial and the median of the baseline trial to
     obtain the change in angle from baseline while the participant is walking.
@@ -93,16 +94,16 @@ def AngleDiff(fw, participant, WalkTrial, mark1, mark2, mark3, plot=False):
     returns R_angle_changes (list of change in joint angle from baseline in degrees)
     """
 
-    trial=1
+    trial=3
 
-    R_ind_base, R_theta_base=JointAngles(fw, participant, trial, mark1, mark2, mark3)
+    R_ind_base, R_theta_base=JointAngles(AFO, PPAFO, Shoes, fw, participant, trial, mark1, mark2, mark3)
     
     cdf1=thinkstats2.Cdf(R_theta_base)
     median_R=cdf1.Percentile(50)
-    print "Baseline Median =", median_R
+    #print "Baseline Median =", median_R
     
     trial=WalkTrial
-    R_ind, R_theta=JointAngles(fw, participant, trial, mark1, mark2, mark3)
+    R_ind, R_theta=JointAngles(AFO, PPAFO, Shoes, fw, participant, trial, mark1, mark2, mark3)
     
     if plot==True:
         
@@ -122,20 +123,36 @@ def AngleDiff(fw, participant, WalkTrial, mark1, mark2, mark3, plot=False):
 
     R_angle_changes=[]
 
-    for eachang in R_theta:
-        R_angle_changes.append(eachang-median_R)
+    if reverse==True:
+        for eachang in R_theta:
+            R_angle_changes.append(-(eachang-median_R))
+    elif reverse==False:
+        for eachang in R_theta:
+            R_angle_changes.append((eachang-median_R))
+        
         
     return R_angle_changes
 
 ##########################################
 def RemoveNans(L_angle, R_angle):
+    """
+    This function takes two sequences and removes the nans from each of them independently (i.e. there is 
+    no dependence on both sequences when removing nans)
     
+    L_angle: Sequence of data for left leg
+    R_angle: sequence of data for right leg
+    
+    returns a tuple containinclean_L, clean_R
+    """
     clean_L=[]
     clean_R=[]
     
     for i in range(len(L_angle)):
-        if np.isnan(L_angle[i]) != True and np.isnan(R_angle[i]) != True:
+        if np.isnan(L_angle[i]) != True:
             clean_L.append(L_angle[i])
-            clean_R.append(R_angle[i])
+    
+    for j in range(len(R_angle)):        
+        if np.isnan(R_angle[j]) != True:
+            clean_R.append(R_angle[j])
             
     return clean_L, clean_R
