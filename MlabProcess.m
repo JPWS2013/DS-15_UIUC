@@ -29,6 +29,8 @@ SummDat=[];%Creates a Data Summary list that contains summary data about data si
 
 FName=[];%Creates a list of all the file names
 
+TotFiles=0;%Starts a file counter to count the total number of files to be processed
+
 %Sets the file path
 %/*.mat part specifies only to obtain file names with .mat in them
 SubFolderPath='OriginalData';%Sets the file path for the folder containing the data
@@ -48,6 +50,7 @@ for j = 1:NumSubFolders(1) %for each subfolder
         FileList=dir(FolderName); %Retrieves all names of data files
         
         NumFiles=size(FileList); %Determines the number of .mat files to load
+        TotFiles=TotFiles+NumFiles(1); %Counts the total number of files processed, regardless of whether they have data in them
         
         for i = 1:NumFiles(1) %for each data file
             name=FileList(i).name %Retrieves the file name of the file as a string
@@ -128,6 +131,7 @@ csvwrite('Csvs/ErrorList.csv', ErrorList)
 clc
 
 ErrorCount
-ErrorList
+TotFiles
+%ErrorList
 
 %clear all
