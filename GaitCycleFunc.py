@@ -236,13 +236,33 @@ def HeelStrike(fw, data, pnum, trial, mark1, mark2):
     #a_mask = np.where(acc<0)
     return heel_strike, time, R_Heel_z, v_time, vel, a_time, down, heel
 
+def EstimatedAutocorr(x):
+    """
+    Using autocorrelation transpose the signal until the two signals line up. The first heel strike should overlay the second.
+    """   
+    x = cycle_start[2]
+    time = cycle_start[1]
+    drop_NA = np.vstack((x[:-1], time))
+    #print drop_NA.shape, x.shape, y.shape
+    drop_NA = drop_NA.T
+    x = drop_NA[0]
+    x = x[~np.isnan(x).any()]
+ 
+    #n = len(x)
+    #var = np.var(x)
+    tao = np.correlate(x, x, mode='full')
+    # assert np.allclose(r, np.array([(x[:n-k]*x[-(n-k):]).sum() for k in range(n)]))
+    #result = r/(var*(np.arange(n, 0, -1)))
+    plt.figure(4)
+    plt.plot(tao)
+    return tao
 
 if __name__ == '__main__':
     import ReadCsvs as rc
     
     data=rc.ReadGaitData()
     
-    AFO_cycle_start = [HeelStrike('AFO', x, 4, 'L_HEEL', 'R_HEEL') for x in [1, 2, 4, 5, 8, 9, 11, 12, 13, 14, 16]]
-    PPAFO_cycle_start = [HeelStrike('PPAFO', x, 4, 'L_HEEL', 'R_HEEL') for x in [1, 2, 4, 5, 6, 7, 8, 9, 11, 12, 13, 14, 16]]
-    Shoes_cycle_start = [HeelStrike('Shoes', x, 4, 'L_HEEL', 'R_HEEL') for x in [1, 2, 4, 5, 6, 7, 8, 9, 11, 12, 13, 14, 16]]
+    AFO_cycle_start = [HeelStrike('AFO', data, x, 4, 'L_HEEL', 'R_HEEL') for x in [1, 2, 4]]
+    PPAFO_cycle_start = [HeelStrike('PPAFO', data, x, 4, 'L_HEEL', 'R_HEEL') for x in [1, 2, 4]]
+    Shoes_cycle_start = [HeelStrike('Shoes', data, x, 4, 'L_HEEL', 'R_HEEL') for x in [1, 2, 4]]
     
