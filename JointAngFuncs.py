@@ -94,23 +94,23 @@ def AngleDiff(AFO, PPAFO, Shoes, fw, participant, baselineTrial, WalkTrial, mark
     returns R_angle_changes (list of change in joint angle from baseline in degrees)
     """
 
-    trial=3
+    #trial=3
 
-    R_ind_base, R_theta_base=JointAngles(AFO, PPAFO, Shoes, fw, participant, trial, mark1, mark2, mark3)
+    R_ind_base, R_theta_base=JointAngles(AFO, PPAFO, Shoes, fw, participant, baselineTrial, mark1, mark2, mark3)
     
     cdf1=thinkstats2.Cdf(R_theta_base)
     median_R=cdf1.Percentile(50)
     #print "Baseline Median =", median_R
     
-    trial=WalkTrial
-    R_ind, R_theta=JointAngles(AFO, PPAFO, Shoes, fw, participant, trial, mark1, mark2, mark3)
+    #trial=WalkTrial
+    R_ind, R_theta=JointAngles(AFO, PPAFO, Shoes, fw, participant, WalkTrial, mark1, mark2, mark3)
     
     if plot==True:
         
         thinkplot.Cdf(cdf1)
         thinkplot.Show(legend=False, title='Angle Baseline', xlabel='Angle in degrees', ylabel='CDF')
         thinkplot.Plot(R_ind_base, R_theta_base)
-        thinkplot.Config(ylim=[135,145])
+        #thinkplot.Config(ylim=[135,145])
         thinkplot.Show(legend=False, title='Angle Baseline Time Series', xlabel='Time in frames', ylabel='Angle in degrees')
 
     
