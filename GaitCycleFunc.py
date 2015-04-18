@@ -116,7 +116,7 @@ def FreqCalc(data, sel_marker, pnum, trialnum, fwchoice):
 
 
 
-def HeelStrike(fw, data, pnum, trial, mark1, mark2):
+def HeelStrike(fw, data, pnum, trial, mark2, plot=False):
     """
     finding the initial heel strike
     """
@@ -193,12 +193,13 @@ def HeelStrike(fw, data, pnum, trial, mark1, mark2):
                 strike_time.append(a_time[i+50])
                 heel_strike.append(R_Heel_z[i+50])
     print maxima, strike_time, heel_strike
-
-    plt.figure()
-    plt.title("Convovled")
-    plt.plot(a_time, down)   
-    plt.xlabel("Time(s)")
-    plt.ylabel("Convolved values")
+    
+    if plot==True:
+        plt.figure()
+        plt.title("Convovled")
+        plt.plot(a_time, down)   
+        plt.xlabel("Time(s)")
+        plt.ylabel("Convolved values")
 
     #plot against a_time, down and time, pos
 #     plt.figure()
@@ -234,7 +235,7 @@ def HeelStrike(fw, data, pnum, trial, mark1, mark2):
     #acc_neg = R_Heel_z[np.where(acc<0)]
     #v_mask = np.where(np.logical_and(velocity>-5, velocity<5))
     #a_mask = np.where(acc<0)
-    return heel_strike, time, R_Heel_z, v_time, vel, a_time, down, heel
+    return maxima, strike_time
 
 def EstimatedAutocorr(fw, data, pnum, trialnum, marker1, marker2):
     """
@@ -243,11 +244,11 @@ def EstimatedAutocorr(fw, data, pnum, trialnum, marker1, marker2):
     cycle_start = HeelStrike(fw, data, pnum, trialnum, marker1, marker2)
     x = cycle_start[2]  
     time = cycle_start[1]
-    drop_NA = np.vstack((x[:-1], time))
+    drop_NA = np.vstack((x, time))
     #print drop_NA.shape, x.shape, y.shape
     drop_NA = drop_NA.T
-    x = drop_NA[0]
-    x = x[~np.isnan(x).any()]
+    x = drop_NA[:,0]
+    #x = x[~np.isnan(x).any()]
  
     #n = len(x)
     #var = np.var(x)

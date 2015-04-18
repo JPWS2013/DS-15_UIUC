@@ -76,6 +76,7 @@ def KneeAngleHypTest(Raw_data1, Raw_data2):
     #print AFO_angle
     data=(data1, data2)
     ht=KneeAngleHT(data)
+    print "Actual Observed Effect Size=", ht.actual
 
     pvalue=ht.PValue()
 
