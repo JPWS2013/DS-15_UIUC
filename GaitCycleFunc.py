@@ -9,6 +9,49 @@ import pylab as plt
 import thinkstats2
 import thinkplot
 
+def CycleExtract(fw, data, pnum, trial, plane, marker, plot, plot2):
+    
+    if fw=='AFO':
+        choicedata=data[0]
+    elif fw=='PPAFO':
+        choicedata=data[1]
+    elif fw=='Shoes':
+        choicedata=data[2]
+    
+    
+    
+    strike_charac, strike_loc = HeelStrike(fw, data, pnum, trial,marker, plot)
+    num_cycles=len(strike_charac)
+
+    dataframe=choicedata[pnum].GetTrial(trial).GetData(plane)
+
+    cycle_set=[]
+
+    for i in range(num_cycles-1):
+    
+        start_rowindex=strike_charac[i][0]+40
+        end_rowindex=strike_charac[i+1][0]+50
+    
+        cycle=dataframe[start_rowindex : end_rowindex]
+        index=range(start_rowindex, end_rowindex, 1)
+    
+        cycle_set.append((index, cycle))
+    
+    if plot2==True:
+        for j in range(len(cycle_set)):
+    
+            index, cycle=cycle_set[j]
+             
+            thinkplot.Plot(dataframe['R_HEEL'], color='blue', label='Right full set')
+            thinkplot.Plot(index, cycle['R_HEEL'], color='red', label='Right cycle set')  
+            thinkplot.Show(legend=True)
+            
+            thinkplot.Plot(dataframe['L_HEEL'], color='blue', label='Left full set')
+            thinkplot.Plot(index, cycle['L_HEEL'], color='red', label='Left cycle set')  
+            thinkplot.Show(legend=True)
+            
+    return cycle_set
+
 def FreqCalc(data, sel_marker, pnum, trialnum, fwchoice):
 
 #FullLabelSet=['SACRAL', 'R_ASIS', 'R_TROCH', 'R_THIGH', 'R_LAT_KNEE', 'R_TIB', 'R_LAT_MAL', 'R_TOE_5', 'R_TOE_1', 'R_MED_MAL', 'R_HEEL', 'R_MED_KNEE', 'L_MED_KNEE', 'L_HEEL', 'L_MED_MAL', 'L_TOE_1', 'L_TOE_5', 'L_LAT_MAL', 'L_TIB', 'L_LAT_KNEE', 'L_TROCH', 'L_THIGH', 'L_ASIS']
