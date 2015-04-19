@@ -116,19 +116,24 @@ def FreqCalc(data, sel_marker, pnum, trialnum, fwchoice):
 
 
 
-def HeelStrike(fw, data, pnum, trial, mark2, plot=False):
-    """
-    finding the initial heel strike
-    """
+def HeelStrike(fw, data, pnum, trial, mark2, plot):
+##    """
+##    finding the initial heel strike
+##   """
+    
+    AFO=data[0]
+    PPAFO=data[1]
+    Shoes=data[2]
     
     if fw=='AFO':
-        dset=data[0]
+        dset=AFO
     if fw=='PPAFO':
-        dset=data[1]
+        dset=PPAFO
     if fw=='Shoes':
-        dset=data[2]
+        dset=Shoes
         
     MT_Obj = dset[pnum].GetTrial(trial) #AFO trial 4 for participant 1
+    #cycle_start = []
     
     #R_Heel_x = MT_Obj.x[mark2]
     #R_Heel_y = MT_Obj.y[mark2]
@@ -200,42 +205,42 @@ def HeelStrike(fw, data, pnum, trial, mark2, plot=False):
         plt.plot(a_time, down)   
         plt.xlabel("Time(s)")
         plt.ylabel("Convolved values")
-
-    #plot against a_time, down and time, pos
-#     plt.figure()
-#     plt.title("heel strike")
-#     plt.plot(time,R_Heel_z)
-#     plt.plot(strike_time, heel_strike, 'o')
-#     plt.xlabel("Time(s)")
-#     plt.ylabel("Position (mm)")
     
-#     plt.figure()
-#     plt.title("Velocity")
-#     plt.plot(v_time, v_smooth)
-#     plt.xlabel("Time(s)")
-#     plt.ylabel("Velocity(mm/s)")
-    
-#     plt.figure()
-#     plt.title("Position")
-#     plt.plot(time, R_Heel_z)
-#     plt.xlabel("Time(s)")
-#     plt.ylabel("Position (mm)")
-    
-    #down_dev = np.diff(down)/a_time[:-1]
-    #mask = np.where(np.logical_and(down_dev>-10, down_dev<10))
-    #a_mask = np.where(acc<0)
-    #plt.figure(5)
-    #plt.plot(a_time[:-1],down_dev, 'o')
-   
-#     plt.title("heel val")
-#     plt.plot(a_time, heel)
-#     plt.ylim([-10000, 4000])
+        #plot against a_time, down and time, pos
+        plt.figure()
+        plt.title("heel strike")
+        plt.plot(time,R_Heel_z)
+        plt.plot(strike_time, heel_strike, 'o')
+        plt.xlabel("Time(s)")
+        plt.ylabel("Position (mm)")
+        
+    #     plt.figure()
+    #     plt.title("Velocity")
+    #     plt.plot(v_time, v_smooth)
+    #     plt.xlabel("Time(s)")
+    #     plt.ylabel("Velocity(mm/s)")
+        
+        plt.figure()
+        plt.title("Position")
+        plt.plot(time, R_Heel_z)
+        plt.xlabel("Time(s)")
+        plt.ylabel("Position (mm)")
+        
+        #down_dev = np.diff(down)/a_time[:-1]
+        #mask = np.where(np.logical_and(down_dev>-10, down_dev<10))
+        #a_mask = np.where(acc<0)
+        #plt.figure(5)
+        #plt.plot(a_time[:-1],down_dev, 'o')
+       
+    #     plt.title("heel val")
+    #     plt.plot(a_time, heel)
+    #     plt.ylim([-10000, 4000])
     
     #vel_zero = R_Heel_z[np.where(np.logical_and(velocity>-5, velocity<5))]
     #acc_neg = R_Heel_z[np.where(acc<0)]
     #v_mask = np.where(np.logical_and(velocity>-5, velocity<5))
     #a_mask = np.where(acc<0)
-    return maxima, strike_time
+    return maxima, strike_time #heel_strike, time, R_Heel_z, v_time, vel, a_time, down, heel
 
 def EstimatedAutocorr(fw, data, pnum, trialnum, marker1, marker2):
     """
@@ -262,10 +267,12 @@ def EstimatedAutocorr(fw, data, pnum, trialnum, marker1, marker2):
 if __name__ == '__main__':
     import ReadCsvs as rc
     
-    data=rc.ReadGaitData()
+    AFO, PPAFO, Shoes=rc.ReadGaitData()
     
-#    AFO_cycle_start = [HeelStrike('AFO', data, x, 4, 'L_HEEL', 'R_HEEL') for x in [1, 2, 4]]
+    data=[AFO, PPAFO, Shoes]
+    
+    AFO_cycle_start = [HeelStrike('AFO', data, 1, 4, 'L_HEEL', 'R_HEEL') for x in [1, 2, 4]]
 #    PPAFO_cycle_start = [HeelStrike('PPAFO', data, x, 4, 'L_HEEL', 'R_HEEL') for x in [1, 2, 4]]
 #    Shoes_cycle_start = [HeelStrike('Shoes', data, x, 4, 'L_HEEL', 'R_HEEL') for x in [1, 2, 4]]
     
-    autocorr = EstimatedAutocorr('AFO', data, 1, 4, 'L_HEEL', 'R_HEEL')
+#    autocorr = EstimatedAutocorr('AFO', data, 1, 4, 'L_HEEL', 'R_HEEL')
