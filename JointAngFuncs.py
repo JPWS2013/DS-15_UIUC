@@ -38,37 +38,37 @@ def JointAngles(AFO, PPAFO, Shoes, fw, pnum, trial, mark1, mark2, mark3):
         
     MT_Obj=dset[pnum].GetTrial(trial) #AFO trial 4 for participant 1
 
-    R_Lat_Knee_x = MT_Obj.x[mark1]
-    R_Tib_x = MT_Obj.x[mark2]
-    R_Thigh_x = MT_Obj.x[mark3]
+    mark1_x = MT_Obj.x[mark1]
+    mark2_x = MT_Obj.x[mark2]
+    mark3_x = MT_Obj.x[mark3]
 
-    R_Lat_Knee_y = MT_Obj.y[mark1]
-    R_Tib_y = MT_Obj.y[mark2]
-    R_Thigh_y = MT_Obj.y[mark3]
+    mark1_y = MT_Obj.y[mark1]
+    mark2_y = MT_Obj.y[mark2]
+    mark3_y = MT_Obj.y[mark3]
 
-    R_Lat_Knee_z = MT_Obj.z[mark1]
-    R_Tib_z = MT_Obj.z[mark2]
-    R_Thigh_z = MT_Obj.z[mark3]
+    mark1_z = MT_Obj.z[mark1]
+    mark2_z = MT_Obj.z[mark2]
+    mark3_z = MT_Obj.z[mark3]
 
 #    x_dir_vec=[1,0,0]
 #    y_dir_vec=[0,1,0]
 #    z_dir_vec=[0,0,1]
 
-    for i in range(len(R_Lat_Knee_x)):
+    for i in range(len(mark1_x)):
     
-        KneeTib_x=R_Lat_Knee_x[i]-R_Tib_x[i]
-        KneeTib_y=R_Lat_Knee_y[i]-R_Tib_y[i]
-        KneeTib_z=R_Lat_Knee_z[i]-R_Tib_z[i]
+        vec21_x=mark1_x[i]-mark2_x[i]
+        vec21_y=mark1_y[i]-mark2_y[i]
+        vec21_z=mark1_z[i]-mark2_z[i]
         
-        ThighKnee_x=R_Lat_Knee_x[i]-R_Thigh_x[i]
-        ThighKnee_y=R_Lat_Knee_y[i]-R_Thigh_y[i]
-        ThighKnee_z=R_Lat_Knee_z[i]-R_Thigh_z[i]
+        vec23_x=mark3_x[i]-mark2_x[i]
+        vec23_y=mark3_y[i]-mark2_y[i]
+        vec23_z=mark3_z[i]-mark2_z[i]
     
-        vec=[KneeTib_x, KneeTib_y, KneeTib_z]
-        vec2=[ThighKnee_x, ThighKnee_y, ThighKnee_z]
+        vec12=[vec21_x, vec21_y, vec21_z]
+        vec23=[vec23_x, vec23_y, vec23_z]
     
         #Apply cos (theta) = (A dot B)/(modA modB)
-        theta=math.acos((np.dot(vec, vec2))/((np.linalg.norm(vec))*(np.linalg.norm(vec2))))
+        theta=math.acos((np.dot(vec12, vec23))/((np.linalg.norm(vec12))*(np.linalg.norm(vec23))))
     
         theta_t.append(theta/math.pi*180)
     
