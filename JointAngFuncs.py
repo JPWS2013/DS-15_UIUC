@@ -42,9 +42,9 @@ def JointAngles(AFO, PPAFO, Shoes, fw, pnum, trial, mark1, mark2, mark3):
     mark2_x = MT_Obj.x[mark2]
     mark3_x = MT_Obj.x[mark3]
 
-    mark1_y = MT_Obj.y[mark1]
-    mark2_y = MT_Obj.y[mark2]
-    mark3_y = MT_Obj.y[mark3]
+    #mark1_y = MT_Obj.y[mark1]
+    #mark2_y = MT_Obj.y[mark2]
+    #mark3_y = MT_Obj.y[mark3]
 
     mark1_z = MT_Obj.z[mark1]
     mark2_z = MT_Obj.z[mark2]
@@ -57,15 +57,17 @@ def JointAngles(AFO, PPAFO, Shoes, fw, pnum, trial, mark1, mark2, mark3):
     for i in range(len(mark1_x)):
     
         vec21_x=mark1_x[i]-mark2_x[i]
-        vec21_y=mark1_y[i]-mark2_y[i]
+        #vec21_y=mark1_y[i]-mark2_y[i]
         vec21_z=mark1_z[i]-mark2_z[i]
         
         vec23_x=mark3_x[i]-mark2_x[i]
-        vec23_y=mark3_y[i]-mark2_y[i]
+        #vec23_y=mark3_y[i]-mark2_y[i]
         vec23_z=mark3_z[i]-mark2_z[i]
     
-        vec12=[vec21_x, vec21_y, vec21_z]
-        vec23=[vec23_x, vec23_y, vec23_z]
+        #vec12=[vec21_x, vec21_y, vec21_z]
+        vec12=[vec21_x, vec21_z]
+        #vec23=[vec23_x, vec23_y, vec23_z]
+        vec23=[vec23_x, vec23_z]
     
         #Apply cos (theta) = (A dot B)/(modA modB)
         theta=math.acos((np.dot(vec12, vec23))/((np.linalg.norm(vec12))*(np.linalg.norm(vec23))))
