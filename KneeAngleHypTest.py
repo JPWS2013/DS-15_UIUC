@@ -103,11 +103,20 @@ def KneeAngleHypTest_General(AFO, PPAFO, Shoes, fw1, fw2, pnum, baselinetrial, t
     Raw_data2=jaf.AngleDiff(AFO, PPAFO, Shoes, fw2, pnum, baselinetrial, trialnum, 'R_TROCH', 'R_LAT_KNEE', 'R_LAT_MAL', False, False)
     
     data1, data2=jaf.RemoveNans(Raw_data1, Raw_data2)
+    
+    testmean_1=np.asarray(data1).mean()
+    testmean_2=np.asarray(data2).mean()
+    
+    print testmean_1
+    print testmean_2
+    
+    if np.isnan(testmean_1)!=True and np.isnan(testmean_2)!=True:
+        #print AFO_angle
+        data=(data1, data2)
+        ht=KneeAngleHT(data)
+        print "Actual Observed Effect Size=", ht.actual
 
-    #print AFO_angle
-    data=(data1, data2)
-    ht=KneeAngleHT(data)
-    print "Actual Observed Effect Size=", ht.actual
-
-    pvalue=ht.PValue()
-    return pvalue
+        pvalue=ht.PValue()
+        return pvalue
+    else:
+        print "Participant ", pnum, "Trial ", trialnum, "has returned nan so it will be skipped!"
