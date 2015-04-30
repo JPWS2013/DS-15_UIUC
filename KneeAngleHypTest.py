@@ -117,6 +117,6 @@ def KneeAngleHypTest_General(AFO, PPAFO, Shoes, fw1, fw2, pnum, baselinetrial, t
         print "Actual Observed Effect Size=", ht.actual
 
         pvalue=ht.PValue()
-        return pvalue
+        return (pvalue, ht.actual)
     else:
         print "Participant ", pnum, "Trial ", trialnum, "has returned nan so it will be skipped!"
