@@ -82,7 +82,7 @@ def KneeAngleHypTest(Raw_data1, Raw_data2):
 
     return pvalue
     
-def KneeAngleHypTest_General(AFO, PPAFO, Shoes, fw1, fw2, pnum, baselinetrial, trialnum):
+def KneeAngleHypTest_General(AFO, PPAFO, Shoes, fw1, fw2, pnum, baselinetrial, trialnum, side):
     """
     This function is the generalized version of the KneeAngleHypTest that carries out the knee angle hypothesis test and returns the pvalue
     
@@ -97,10 +97,18 @@ def KneeAngleHypTest_General(AFO, PPAFO, Shoes, fw1, fw2, pnum, baselinetrial, t
     
     returns: pvalue of the hypothesis test
     """
+    if side=='R':
+        mark1='R_TROCH'
+        mark2='R_LAT_KNEE'
+        mark3='R_LAT_MAL'
     
+    if side == 'L':
+        mark1='L_TROCH'
+        mark2='L_LAT_KNEE'
+        mark3='L_LAT_MAL'
     
-    Raw_data1=jaf.AngleDiff(AFO, PPAFO, Shoes, fw1, pnum, baselinetrial, trialnum, 'R_TROCH', 'R_LAT_KNEE', 'R_LAT_MAL', False, False)
-    Raw_data2=jaf.AngleDiff(AFO, PPAFO, Shoes, fw2, pnum, baselinetrial, trialnum, 'R_TROCH', 'R_LAT_KNEE', 'R_LAT_MAL', False, False)
+    Raw_data1=jaf.AngleDiff(AFO, PPAFO, Shoes, fw1, pnum, baselinetrial, trialnum, mark1, mark2, mark3, False, False)
+    Raw_data2=jaf.AngleDiff(AFO, PPAFO, Shoes, fw2, pnum, baselinetrial, trialnum, mark1, mark2, mark3, False, False)
     
     data1, data2=jaf.RemoveNans(Raw_data1, Raw_data2)
     
